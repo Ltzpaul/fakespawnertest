@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "id": "fakespawner",
+  "version": "${version}",
+  "name": "Fake Spawner Mod",
+  "description": "Client-side cosmetic Copper Block disguise and local Skeleton Spawner preview for KingSMP-style gameplay.",
+  "authors": ["KingSMP Mod Project"],
+  "contact": {},
+  "license": "MIT",
+  "environment": "client",
+  "entrypoints": {
+    "client": [
+      "com.kingsmp.fakespawner.FakeSpawnerClient"
+    ]
+  },
+  "mixins": [
+    "fakespawner.client.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.18.1",
+    "minecraft": "~1.21.11",
+    "java": ">=21",
+    "fabric-api": ">=0.141.3"
+  }
+}
