@@ -265,14 +265,10 @@ public static void removePreviewSkeleton(BlockPos pos) {
     }
 
     public static int getLocalStackCount(BlockPos pos) {
-
-    public static int getLocalExperience() {
-        return localExperience;
+        return LOCAL_STACKS.getOrDefault(pos, INITIAL_LOCAL_STACK);
     }
 
-    public static void collectLocalExperience() {
-        int gained = localExperience;
-        if (gained <= 0) {
+    public static int getLocalExperience() {
             return;
         }
         localExperience = 0;
