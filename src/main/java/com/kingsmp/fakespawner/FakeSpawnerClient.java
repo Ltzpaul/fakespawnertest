@@ -281,5 +281,6 @@ if (localWorldTime % 5 == 0) {
             client.player.sendMessage(Text.literal("Bạn đã nhận 512 EXP từ Lồng triệu hồi Skeleton!")
                     .formatted(Formatting.GREEN), true);
         }
-        rewardHudExpiresAt = System.currentTimeMillis() + 14_000L;
+rewardHudExpiresAt = System.currentTimeMillis() + 14_000L;
     }
+}
