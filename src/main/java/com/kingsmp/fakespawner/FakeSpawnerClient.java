@@ -7,6 +7,7 @@ import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.fabricmc.fabric.api.event.player.AttackBlockCallback;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
+import net.minecraft.block.Blocks;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
@@ -16,8 +17,8 @@ import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.mob.SkeletonEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.registry.tag.ItemTags;
 import net.minecraft.particle.ParticleTypes;
+import net.minecraft.registry.tag.ItemTags;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
@@ -29,7 +30,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
-import net.minecraft.block.Blocks;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -67,7 +67,7 @@ public final class FakeSpawnerClient implements ClientModInitializer {
     }
 
     private static void registerTooltip() {
-ItemTooltipCallback.EVENT.register((stack, tooltipContext, tooltipType, lines) -> {
+        ItemTooltipCallback.EVENT.register((stack, tooltipContext, tooltipType, lines) -> {
             if (stack.isOf(Items.COPPER_BLOCK)) {
                 lines.add(Text.literal("Interact with Spawn Egg:")
                         .formatted(Formatting.GRAY)
@@ -242,9 +242,9 @@ ItemTooltipCallback.EVENT.register((stack, tooltipContext, tooltipType, lines) -
             skeleton.setYaw(yaw);
             skeleton.setHeadYaw(yaw);
             skeleton.setBodyYaw(yaw);
-skeleton.setPosition(pos.getX() + 0.5, pos.getY() + 0.15, pos.getZ() + 0.5);
+            skeleton.setPosition(pos.getX() + 0.5, pos.getY() + 0.15, pos.getZ() + 0.5);
 
-if (localWorldTime % 5 == 0) {
+            if (localWorldTime % 5 == 0) {
                 double x = pos.getX() + 0.5 + (random.nextDouble() - 0.5) * 0.55;
                 double y = pos.getY() + 0.45 + random.nextDouble() * 0.55;
                 double z = pos.getZ() + 0.5 + (random.nextDouble() - 0.5) * 0.55;
@@ -273,14 +273,31 @@ if (localWorldTime % 5 == 0) {
         return localExperience;
     }
 
-    public static void collectLocalExperience(MinecraftClient client) {
+    public static void collectLocalExperience() {
         localExperience = 0;
+        MinecraftClient client = MinecraftClient.getInstance();
         if (client.player != null && client.world != null) {
             client.player.playSound(SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP, 1.0f, 1.0f);
             client.player.playSound(SoundEvents.ENTITY_PLAYER_LEVELUP, 0.8f, 1.1f);
             client.player.sendMessage(Text.literal("Bạn đã nhận 512 EXP từ Lồng triệu hồi Skeleton!")
                     .formatted(Formatting.GREEN), true);
         }
-rewardHudExpiresAt = System.currentTimeMillis() + 14_000L;
+        rewardHudExpiresAt = System.currentTimeMillis() + 14_000L;
+    }
+
+    private static void registerRewardHud() {
+        HudRenderCallback.EVENT.register((drawContext, tickCounter) -> {
+            if (System.currentTimeMillis() > rewardHudExpiresAt) {
+                return;
+            }
+            MinecraftClient client = MinecraftClient.getInstance();
+            if (client.player == null || client.options.hudHidden) {
+                return;
+            }
+            Text notice = Text.literal("+512 EXP (Lồng triệu hồi Skeleton)").formatted(Formatting.AQUA);
+            int width = client.getWindow().getScaledWidth();
+            int x = (width - client.textRenderer.getWidth(notice)) / 2;
+            drawContext.drawTextWithShadow(client.textRenderer, notice, x, 24, 0x55FFFF);
+        });
     }
 }
