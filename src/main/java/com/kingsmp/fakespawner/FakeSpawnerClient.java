@@ -258,10 +258,12 @@ if (localWorldTime % 5 == 0) {
         }
     }
 
-    public static void removePreviewSkeleton(BlockPos pos) {
+public static void removePreviewSkeleton(BlockPos pos) {
+        SkeletonEntity skeleton = PREVIEW_SKELETONS.remove(pos);
         if (skeleton != null && !skeleton.isRemoved() && lastWorld != null) {
             lastWorld.removeEntity(skeleton.getId(), Entity.RemovalReason.DISCARDED);
         }
+    }
     }
 
     public static int getLocalStackCount(BlockPos pos) {
