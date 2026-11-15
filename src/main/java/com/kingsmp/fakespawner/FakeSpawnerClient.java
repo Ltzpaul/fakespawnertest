@@ -257,7 +257,8 @@ if (localWorldTime % 5 == 0) {
             }
         }
     }
-public static void removePreviewSkeleton(BlockPos pos) {
+
+    public static void removePreviewSkeleton(BlockPos pos) {
         SkeletonEntity skeleton = PREVIEW_SKELETONS.remove(pos);
         if (skeleton != null && !skeleton.isRemoved() && lastWorld != null) {
             lastWorld.removeEntity(skeleton.getId(), Entity.RemovalReason.DISCARDED);
@@ -269,37 +270,16 @@ public static void removePreviewSkeleton(BlockPos pos) {
     }
 
     public static int getLocalExperience() {
-            return;
-        }
-        localExperience = 0;
+        return localExperience;
+    }
 
-        MinecraftClient client = MinecraftClient.getInstance();
+    public static void collectLocalExperience(MinecraftClient client) {
+        localExperience = 0;
         if (client.player != null && client.world != null) {
-            client.player.sendMessage(Text.literal("+EXP " + gained).formatted(Formatting.GREEN), true);
-            client.world.playSound(client.player, client.player.getBlockPos(),
-                    SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.PLAYERS, 0.8f, 1.15f);
-            client.world.playSound(client.player, client.player.getBlockPos(),
-                    SoundEvents.ENTITY_PLAYER_LEVELUP, SoundCategory.PLAYERS, 0.35f, 1.2f);
+            client.player.playSound(SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP, 1.0f, 1.0f);
+            client.player.playSound(SoundEvents.ENTITY_PLAYER_LEVELUP, 0.8f, 1.1f);
+            client.player.sendMessage(Text.literal("Bạn đã nhận 512 EXP từ Lồng triệu hồi Skeleton!")
+                    .formatted(Formatting.GREEN), true);
         }
         rewardHudExpiresAt = System.currentTimeMillis() + 14_000L;
     }
-
-    private static void registerRewardHud() {
-        HudRenderCallback.EVENT.register((drawContext, tickCounter) -> {
-            if (System.currentTimeMillis() > rewardHudExpiresAt) {
-                return;
-            }
-            MinecraftClient client = MinecraftClient.getInstance();
-            if (client.player == null) {
-                return;
-            }
-            int x = 8;
-            int y = Math.max(8, drawContext.getScaledWindowHeight() - 86);
-            drawContext.drawText(client.textRenderer,
-                    Text.literal("+$ 53.76K").formatted(Formatting.GREEN), x, y, 0xFF55FF55, true);
-            drawContext.drawText(client.textRenderer,
-                    Text.literal("+EXP 512").formatted(Formatting.GREEN), x, y + 12, 0xFF55FF55, true);
-        });
-    }
-
-}
