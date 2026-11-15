@@ -244,18 +244,17 @@ ItemTooltipCallback.EVENT.register((stack, tooltipContext, tooltipType, lines) -
             skeleton.setBodyYaw(yaw);
 skeleton.setPosition(pos.getX() + 0.5, pos.getY() + 0.15, pos.getZ() + 0.5);
 
-            if (localWorldTime % 5 == 0) {
+if (localWorldTime % 5 == 0) {
                 double x = pos.getX() + 0.5 + (random.nextDouble() - 0.5) * 0.55;
                 double y = pos.getY() + 0.45 + random.nextDouble() * 0.55;
                 double z = pos.getZ() + 0.5 + (random.nextDouble() - 0.5) * 0.55;
-                world.addParticle(ParticleTypes.SMOKE, false, false, x, y, z,
+                world.addParticleClient(ParticleTypes.SMOKE, x, y, z,
                         (random.nextDouble() - 0.5) * 0.015, 0.025, (random.nextDouble() - 0.5) * 0.015);
                 if (localWorldTime % 10 == 0) {
-                    world.addParticle(ParticleTypes.FLAME, false, false, x, y, z,
+                    world.addParticleClient(ParticleTypes.FLAME, x, y, z,
                             (random.nextDouble() - 0.5) * 0.01, 0.02, (random.nextDouble() - 0.5) * 0.01);
                 }
             }
-        }
     }
     public static void removePreviewSkeleton(BlockPos pos) {
         SkeletonEntity skeleton = PREVIEW_SKELETONS.remove(pos);
