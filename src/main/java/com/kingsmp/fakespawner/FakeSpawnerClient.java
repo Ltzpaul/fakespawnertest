@@ -81,7 +81,7 @@ public final class FakeSpawnerClient implements ClientModInitializer {
 
     private static void registerBlockInteractions() {
         UseBlockCallback.EVENT.register((player, world, hand, hitResult) -> {
-            if (!world.isClient || hand != Hand.MAIN_HAND) {
+          if (!world.isClient() || hand != Hand.MAIN_HAND)
                 return ActionResult.PASS;
             }
 
@@ -109,7 +109,7 @@ public final class FakeSpawnerClient implements ClientModInitializer {
                 return ActionResult.FAIL;
             }
 
-            if (held.isEmpty() || held.getItem() instanceof PickaxeItem) {
+            if (held.isEmpty() || held.isIn(ItemTags.PICKAXES))
                 MinecraftClient.getInstance().setScreen(new FakeSpawnerScreen(pos));
                 // The chest-like menu is local UI only; prevent the block interaction packet.
                 return ActionResult.FAIL;
@@ -118,7 +118,7 @@ public final class FakeSpawnerClient implements ClientModInitializer {
         });
 
         AttackBlockCallback.EVENT.register((player, world, hand, pos, direction) -> {
-            if (!world.isClient || hand != Hand.MAIN_HAND) {
+           if (!world.isClient() || hand != Hand.MAIN_HAND)
                 return ActionResult.PASS;
             }
             if (!world.getBlockState(pos).isOf(Blocks.COPPER_BLOCK)) {
@@ -248,10 +248,10 @@ public final class FakeSpawnerClient implements ClientModInitializer {
                 double x = pos.getX() + 0.5 + (random.nextDouble() - 0.5) * 0.55;
                 double y = pos.getY() + 0.45 + random.nextDouble() * 0.55;
                 double z = pos.getZ() + 0.5 + (random.nextDouble() - 0.5) * 0.55;
-                world.addParticle(ParticleTypes.SMOKE, x, y, z,
+               world.addParticle(ParticleTypes.SMOKE, false, false, x, y, z, ...
                         (random.nextDouble() - 0.5) * 0.015, 0.025, (random.nextDouble() - 0.5) * 0.015);
                 if (localWorldTime % 10 == 0) {
-                    world.addParticle(ParticleTypes.FLAME, x, y, z,
+                  world.addParticle(ParticleTypes.FLAME, false, false, x, y, z, ...
                             (random.nextDouble() - 0.5) * 0.01, 0.02, (random.nextDouble() - 0.5) * 0.01);
                 }
             }
